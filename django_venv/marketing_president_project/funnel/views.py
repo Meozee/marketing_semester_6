@@ -1,4 +1,6 @@
-from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
 
+@login_required
 def funnel_home(request):
-    return HttpResponse("Halaman Funnel Enrollment")
+    return render(request, 'funnel/index.html')

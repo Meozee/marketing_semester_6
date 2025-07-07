@@ -1,44 +1,473 @@
- 
-<!-- templates/base.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}My App{% endblock %}</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <title>{% block title %}Dashboard{% endblock %}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 0 20px;
+            height: 60px;
             display: flex;
-            min-height: 100vh;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
         }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .menu-toggle {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+
+        .menu-toggle:hover {
+            background-color: rgba(255,255,255,0.1);
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            letter-spacing: 1px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 20px;
+            transition: background-color 0.3s ease;
+        }
+
+        .user-info:hover {
+            background-color: rgba(255,255,255,0.1);
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        /* Sidebar */
         .sidebar {
-            width: 250px;
-            background: #f8f9fa;
-            padding: 20px;
+            width: 260px;
+            background: white;
+            height: calc(100vh - 60px);
+            position: fixed;
+            top: 60px;
+            left: 0;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            transform: translateX(0);
+            transition: transform 0.3s ease;
+            z-index: 999;
+            overflow-y: auto;
         }
-        .content {
-            flex-grow: 1;
+
+        .sidebar.hidden {
+            transform: translateX(-260px);
+        }
+
+        .sidebar-overlay {
+            position: fixed;
+            top: 60px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            z-index: 998;
+        }
+
+        .sidebar-overlay.active {
+            display: block;
+        }
+
+        .menu {
+            padding: 20px 0;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            cursor: pointer;
+            color: #555;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .menu-item:hover {
+            background-color: #f8f9fa;
+            color: #667eea;
+            border-left-color: #667eea;
+        }
+
+        .menu-item.active {
+            background-color: #e8f0fe;
+            color: #667eea;
+            border-left-color: #667eea;
+        }
+
+        .menu-item i {
+            width: 20px;
+            margin-right: 12px;
+            font-size: 16px;
+        }
+
+        .menu-section {
+            margin-bottom: 30px;
+        }
+
+        .menu-section-title {
+            padding: 8px 20px;
+            font-size: 12px;
+            color: #999;
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .profile-section {
+            padding: 20px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .profile-info {
+            text-align: center;
+        }
+
+        .profile-info h4 {
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .profile-info p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .back-button {
+            display: flex;
+            align-items: center;
+            padding: 10px 20px;
+            color: #667eea;
+            cursor: pointer;
+            font-size: 14px;
+            transition: color 0.3s ease;
+        }
+
+        .back-button:hover {
+            color: #5a6fd8;
+        }
+
+        .back-button i {
+            margin-right: 8px;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 260px;
+            margin-top: 60px;
             padding: 30px;
+            min-height: calc(100vh - 60px);
+            transition: margin-left 0.3s ease;
+        }
+
+        .main-content.expanded {
+            margin-left: 0;
+        }
+
+        /* Show sidebar button when hidden */
+        .show-sidebar-btn {
+            position: fixed;
+            top: 70px;
+            left: 10px;
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 12px;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            z-index: 1001;
+            transform: translateX(-50px);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .show-sidebar-btn.visible {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        .show-sidebar-btn:hover {
+            background: #5a6fd8;
+            transform: translateX(0) scale(1.1);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-260px);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .sidebar-overlay.active {
+                display: block;
+            }
+            
+            .header-right .user-info span {
+                display: none;
+            }
+        }
+
+        /* Custom scrollbar */
+        .sidebar::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .sidebar::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 2px;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
         }
     </style>
 </head>
 <body>
-    <div class="sidebar">
-        <h4>MENU</h4>
-        <ul class="nav flex-column">
-            <li class="nav-item"><a href="{% url 'homepage' %}" class="nav-link">Homepage</a></li>
-            <li class="nav-item"><a href="{% url 'dashboard_home' %}" class="nav-link">Dashboard</a></li>
-            <li class="nav-item"><a href="{% url 'funnel_home' %}" class="nav-link">Funnel Enrollment</a></li>
-            <li class="nav-item"><a href="{% url 'testing_home' %}" class="nav-link">Data Testing</a></li>
-            <li class="nav-item"><a href="{% url 'approval_home' %}" class="nav-link">Approval Register</a></li>
-            <li class="nav-item"><a href="{% url 'admin_navbar' %}" class="nav-link">Navbar Admin</a></li>
-            <li class="nav-item"><a href="{% url 'admin_panel' %}" class="nav-link">Admin Panel</a></li>
-            <li class="nav-item"><a href="{% url 'about' %}" class="nav-link">About</a></li>
-        </ul>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-left">
+            <button class="menu-toggle" onclick="toggleSidebar()">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="logo" onclick="location.href='/'">
+                <i class="fas fa-chart-line"></i> DASHBOARD
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="user-info" onclick="showProfileMenu()">
+                <div class="user-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <span>{{ request.user.username|default:"User" }}</span>
+            </div>
+        </div>
     </div>
-    <div class="content">
+
+    <!-- Sidebar Overlay -->
+    <div id="sidebar-overlay" class="sidebar-overlay" onclick="hideSidebar()"></div>
+
+    <!-- Show Sidebar Button -->
+    <button id="show-sidebar-btn" class="show-sidebar-btn" onclick="showSidebar()">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Sidebar -->
+    <div id="sidebar" class="sidebar">
+        <div id="sidebar-content" class="menu">
+            <!-- Sidebar menu akan diisi dengan JavaScript -->
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div id="main-content" class="main-content">
         {% block content %}
+        <div style="text-align: center; margin-top: 50px;">
+            <h2>Welcome to Dashboard</h2>
+            <p>Select a menu item from the sidebar to get started.</p>
+        </div>
         {% endblock %}
     </div>
+
+    <script>
+        const isAdmin = "{{ request.user.is_superuser|yesno:'true,false' }}" === "true";
+        const isAuthenticated = "{{ request.user.is_authenticated|yesno:'true,false' }}" === "true";
+        const username = "{{ request.user.username|default:'User' }}";
+        const email = "{{ request.user.email|default:'user@example.com' }}";
+
+        const defaultMenu = `
+            <div class="menu-section">
+                <div class="menu-section-title">Main Menu</div>
+                <div class="menu-item" onclick="location.href='/dashboard/'">
+                    <i class="fas fa-chart-line"></i> Dashboard
+                </div>
+                <div class="menu-item" onclick="location.href='/funnel/'">
+                    <i class="fas fa-filter"></i> Funnel Enrolment
+                </div>
+                <div class="menu-item" onclick="location.href='/testing/'">
+                    <i class="fas fa-vial"></i> Data Testing
+                </div>
+            </div>
+            ${isAdmin ? `
+            <div class="menu-section">
+                <div class="menu-section-title">Admin</div>
+                <div class="menu-item" onclick="location.href='/approval/'">
+                    <i class="fas fa-check-circle"></i> Approval Regist
+                </div>
+                <div class="menu-item" onclick="location.href='/adminpanel/'">
+                    <i class="fas fa-cogs"></i> Admin Panel
+                </div>
+            </div>
+            ` : ''}
+            <div class="menu-section">
+                <div class="menu-section-title">Others</div>
+                <div class="menu-item" onclick="location.href='/about/'">
+                    <i class="fas fa-info-circle"></i> About
+                </div>
+                <div class="menu-item" onclick="location.href='/profile/logout/'">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </div>
+            </div>
+        `;
+
+        const profileMenu = `
+            <div class="profile-section">
+                <div class="profile-info">
+                    <h4>${username}</h4>
+                    <p>${email}</p>
+                </div>
+            </div>
+            <div class="menu-section">
+                <div class="menu-item" onclick="location.href='/profile/'">
+                    <i class="fas fa-user-edit"></i> Edit Profile
+                </div>
+                <div class="menu-item" onclick="location.href='/profile/settings/'">
+                    <i class="fas fa-cog"></i> Settings
+                </div>
+                ${isAuthenticated ? 
+                  '<div class="menu-item" onclick="location.href=\'/profile/logout/\'"><i class="fas fa-sign-out-alt"></i> Logout</div>' : 
+                  '<div class="menu-item" onclick="location.href=\'/profile/login/\'"><i class="fas fa-sign-in-alt"></i> Login</div>'
+                }
+            </div>
+            <div class="back-button" onclick="loadDefaultMenu()">
+                <i class="fas fa-arrow-left"></i> Back to Menu
+            </div>
+        `;
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('main-content');
+            const showBtn = document.getElementById('show-sidebar-btn');
+            const overlay = document.getElementById('sidebar-overlay');
+            
+            if (sidebar.classList.contains('hidden')) {
+                showSidebar();
+            } else {
+                hideSidebar();
+            }
+        }
+
+        function showSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('main-content');
+            const showBtn = document.getElementById('show-sidebar-btn');
+            const overlay = document.getElementById('sidebar-overlay');
+            
+            sidebar.classList.remove('hidden');
+            showBtn.classList.remove('visible');
+            
+            // On mobile, show overlay
+            if (window.innerWidth <= 768) {
+                overlay.classList.add('active');
+            } else {
+                mainContent.classList.remove('expanded');
+            }
+        }
+
+        function hideSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('main-content');
+            const showBtn = document.getElementById('show-sidebar-btn');
+            const overlay = document.getElementById('sidebar-overlay');
+            
+            sidebar.classList.add('hidden');
+            showBtn.classList.add('visible');
+            mainContent.classList.add('expanded');
+            overlay.classList.remove('active');
+        }
+
+        function showProfileMenu() {
+            document.getElementById('sidebar-content').innerHTML = profileMenu;
+        }
+
+        function loadDefaultMenu() {
+            document.getElementById('sidebar-content').innerHTML = defaultMenu;
+        }
+
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            const overlay = document.getElementById('sidebar-overlay');
+            if (window.innerWidth > 768) {
+                overlay.classList.remove('active');
+            }
+        });
+
+        // Load menu saat halaman pertama kali dibuka
+        window.addEventListener('load', function() {
+            loadDefaultMenu();
+            
+            // Auto-hide sidebar on mobile
+            if (window.innerWidth <= 768) {
+                hideSidebar();
+            }
+        });
+    </script>
 </body>
 </html>

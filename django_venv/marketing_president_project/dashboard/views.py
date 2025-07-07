@@ -1,4 +1,6 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 
+@login_required
 def dashboard_home(request):
-    return render(request, 'dashboard/national.html')  # nanti kita buat file ini
+    return render(request, 'dashboard/home.html')

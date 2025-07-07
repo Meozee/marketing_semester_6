@@ -1,7 +1,6 @@
-from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
 
-def profile(request):
-    return HttpResponse("Halaman Profil Pengguna")
-
-def logout_view(request):
-    return HttpResponse("Logout Berhasil (dummy)")
+@login_required
+def profile_view(request):
+    return render(request, 'users/profile.html')

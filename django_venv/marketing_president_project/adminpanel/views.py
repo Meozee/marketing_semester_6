@@ -1,7 +1,6 @@
-from django.http import HttpResponse
+from django.contrib.admin.views.decorators import staff_member_required
+from django.shortcuts import render
 
-def admin_navbar(request):
-    return HttpResponse("Halaman Admin Navbar")
-
+@staff_member_required
 def admin_panel(request):
-    return HttpResponse("Halaman Admin Panel (CRUD & Log)")
+    return render(request, 'adminpanel/index.html')
