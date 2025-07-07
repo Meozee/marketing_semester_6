@@ -1,0 +1,44 @@
+ 
+<!-- templates/base.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}My App{% endblock %}</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            display: flex;
+            min-height: 100vh;
+        }
+        .sidebar {
+            width: 250px;
+            background: #f8f9fa;
+            padding: 20px;
+        }
+        .content {
+            flex-grow: 1;
+            padding: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h4>MENU</h4>
+        <ul class="nav flex-column">
+            <li class="nav-item"><a href="{% url 'homepage' %}" class="nav-link">Homepage</a></li>
+            <li class="nav-item"><a href="{% url 'dashboard_home' %}" class="nav-link">Dashboard</a></li>
+            <li class="nav-item"><a href="{% url 'funnel_home' %}" class="nav-link">Funnel Enrollment</a></li>
+            <li class="nav-item"><a href="{% url 'testing_home' %}" class="nav-link">Data Testing</a></li>
+            <li class="nav-item"><a href="{% url 'approval_home' %}" class="nav-link">Approval Register</a></li>
+            <li class="nav-item"><a href="{% url 'admin_navbar' %}" class="nav-link">Navbar Admin</a></li>
+            <li class="nav-item"><a href="{% url 'admin_panel' %}" class="nav-link">Admin Panel</a></li>
+            <li class="nav-item"><a href="{% url 'about' %}" class="nav-link">About</a></li>
+        </ul>
+    </div>
+    <div class="content">
+        {% block content %}
+        {% endblock %}
+    </div>
+</body>
+</html>
