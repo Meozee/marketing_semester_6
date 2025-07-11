@@ -2,9 +2,27 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Dashboard{% endblock %}</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
+        :root {
+            --primary-color: #6366f1;
+            --primary-hover: #4f46e5;
+            --secondary-color: #8b5cf6;
+            --background-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-color: #334155;
+            --text-light: #64748b;
+            --sidebar-width: 280px;
+            --header-height: 70px;
+            --transition-speed: 0.3s;
+            --border-radius: 12px;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -12,120 +30,138 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f5f7fa;
-            color: #333;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
         }
 
-        /* Header */
         .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             color: white;
-            padding: 0 20px;
-            height: 60px;
+            padding: 0 25px;
+            height: var(--header-height);
             display: flex;
             align-items: center;
             justify-content: space-between;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: var(--shadow-md);
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             z-index: 1000;
+            transition: all var(--transition-speed) ease;
         }
 
-        .header-left {
+        .header.scrolled {
+            box-shadow: var(--shadow-lg);
+        }
+
+        .header-left, .header-right {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 20px;
         }
 
         .menu-toggle {
             background: none;
             border: none;
             color: white;
-            font-size: 18px;
+            font-size: 20px;
             cursor: pointer;
-            padding: 8px;
-            border-radius: 4px;
-            transition: background-color 0.3s ease;
+            padding: 10px;
+            border-radius: 50%;
+            transition: all var(--transition-speed) ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
         }
 
         .menu-toggle:hover {
-            background-color: rgba(255,255,255,0.1);
+            background-color: rgba(255, 255, 255, 0.15);
+            transform: rotate(90deg);
         }
 
         .logo {
-            font-size: 24px;
-            font-weight: bold;
+            font-size: 22px;
+            font-weight: 700;
             cursor: pointer;
-            letter-spacing: 1px;
-        }
-
-        .header-right {
+            letter-spacing: 0.5px;
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 10px;
+        }
+
+        .logo i {
+            font-size: 24px;
         }
 
         .user-info {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
             cursor: pointer;
-            padding: 8px 12px;
-            border-radius: 20px;
-            transition: background-color 0.3s ease;
+            padding: 8px 16px;
+            border-radius: 50px;
+            transition: all var(--transition-speed) ease;
         }
 
         .user-info:hover {
-            background-color: rgba(255,255,255,0.1);
+            background-color: rgba(255, 255, 255, 0.15);
         }
 
         .user-avatar {
-            width: 32px;
-            height: 32px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
-            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            background: linear-gradient(45deg, #7c3aed, #10b981);
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: bold;
-            font-size: 14px;
+            font-size: 15px;
+            color: white;
+            box-shadow: var(--shadow-sm);
         }
 
-        /* Sidebar */
         .sidebar {
-            width: 260px;
-            background: white;
-            height: calc(100vh - 60px);
+            width: var(--sidebar-width);
+            background: var(--card-bg);
+            height: calc(100vh - var(--header-height));
             position: fixed;
-            top: 60px;
+            top: var(--header-height);
             left: 0;
-            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            box-shadow: var(--shadow-md);
             transform: translateX(0);
-            transition: transform 0.3s ease;
+            transition: transform var(--transition-speed) ease;
             z-index: 999;
             overflow-y: auto;
+            border-top-right-radius: var(--border-radius);
         }
 
         .sidebar.hidden {
-            transform: translateX(-260px);
+            transform: translateX(-100%);
         }
 
         .sidebar-overlay {
             position: fixed;
-            top: 60px;
+            top: var(--header-height);
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0,0,0,0.5);
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(5px);
             display: none;
             z-index: 998;
+            opacity: 0;
+            transition: opacity var(--transition-speed) ease;
         }
 
         .sidebar-overlay.active {
             display: block;
+            opacity: 1;
         }
 
         .menu {
@@ -135,30 +171,37 @@
         .menu-item {
             display: flex;
             align-items: center;
-            padding: 12px 20px;
-            cursor: pointer;
-            color: #555;
+            padding: 14px 25px;
+            color: var(--text-light);
             text-decoration: none;
-            transition: all 0.3s ease;
-            border-left: 3px solid transparent;
+            transition: all var(--transition-speed) ease;
+            border-left: 4px solid transparent;
+            margin: 0 10px;
+            border-radius: 8px;
         }
 
         .menu-item:hover {
-            background-color: #f8f9fa;
-            color: #667eea;
-            border-left-color: #667eea;
+            background-color: rgba(99, 102, 241, 0.1);
+            color: var(--primary-color);
+            transform: translateX(5px);
         }
 
         .menu-item.active {
-            background-color: #e8f0fe;
-            color: #667eea;
-            border-left-color: #667eea;
+            background-color: rgba(99, 102, 241, 0.1);
+            color: var(--primary-color);
+            border-left-color: var(--primary-color);
+            font-weight: 500;
         }
 
         .menu-item i {
-            width: 20px;
-            margin-right: 12px;
-            font-size: 16px;
+            width: 24px;
+            margin-right: 14px;
+            font-size: 18px;
+            transition: transform var(--transition-speed) ease;
+        }
+
+        .menu-item:hover i {
+            transform: scale(1.1);
         }
 
         .menu-section {
@@ -166,80 +209,104 @@
         }
 
         .menu-section-title {
-            padding: 8px 20px;
-            font-size: 12px;
-            color: #999;
+            padding: 10px 25px;
+            font-size: 13px;
+            color: var(--text-light);
             text-transform: uppercase;
             font-weight: 600;
             letter-spacing: 0.5px;
         }
 
         .profile-section {
-            padding: 20px;
-            border-bottom: 1px solid #e9ecef;
+            padding: 25px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            text-align: center;
         }
 
-        .profile-info {
-            text-align: center;
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #7c3aed, #10b981);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 30px;
+            color: white;
+            margin: 0 auto 15px;
+            box-shadow: var(--shadow-md);
         }
 
         .profile-info h4 {
             margin-bottom: 5px;
-            color: #333;
+            color: var(--text-color);
+            font-size: 18px;
         }
 
         .profile-info p {
-            color: #666;
+            color: var(--text-light);
             font-size: 14px;
         }
 
         .back-button {
             display: flex;
             align-items: center;
-            padding: 10px 20px;
-            color: #667eea;
+            padding: 12px 25px;
+            color: var(--primary-color);
             cursor: pointer;
-            font-size: 14px;
-            transition: color 0.3s ease;
+            font-size: 15px;
+            transition: all var(--transition-speed) ease;
+            margin: 15px 10px;
+            border-radius: 8px;
         }
 
         .back-button:hover {
-            color: #5a6fd8;
+            background-color: rgba(99, 102, 241, 0.1);
+            color: var(--primary-hover);
         }
 
         .back-button i {
-            margin-right: 8px;
+            margin-right: 10px;
+            transition: transform var(--transition-speed) ease;
         }
 
-        /* Main Content */
+        .back-button:hover i {
+            transform: translateX(-3px);
+        }
+
         .main-content {
-            margin-left: 260px;
-            margin-top: 60px;
+            margin-left: var(--sidebar-width);
+            margin-top: var(--header-height);
             padding: 30px;
-            min-height: calc(100vh - 60px);
-            transition: margin-left 0.3s ease;
+            min-height: calc(100vh - var(--header-height));
+            transition: margin-left var(--transition-speed) ease;
         }
 
         .main-content.expanded {
             margin-left: 0;
         }
 
-        /* Show sidebar button when hidden */
         .show-sidebar-btn {
             position: fixed;
-            top: 70px;
-            left: 10px;
-            background: #667eea;
+            top: 85px;
+            left: 20px;
+            background: var(--primary-color);
             color: white;
             border: none;
-            padding: 10px 12px;
+            padding: 12px;
             border-radius: 50%;
             cursor: pointer;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            box-shadow: var(--shadow-lg);
             z-index: 1001;
-            transform: translateX(-50px);
+            transform: translateX(-60px);
             opacity: 0;
-            transition: all 0.3s ease;
+            transition: all var(--transition-speed) ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            height: 44px;
         }
 
         .show-sidebar-btn.visible {
@@ -248,57 +315,120 @@
         }
 
         .show-sidebar-btn:hover {
-            background: #5a6fd8;
+            background: var(--primary-hover);
             transform: translateX(0) scale(1.1);
         }
 
-        /* Responsive */
-        @media (max-width: 768px) {
+        @media (max-width: 992px) {
             .sidebar {
-                transform: translateX(-260px);
+                transform: translateX(-100%);
             }
-            
             .main-content {
                 margin-left: 0;
             }
-            
-            .sidebar-overlay.active {
-                display: block;
-            }
-            
             .header-right .user-info span {
                 display: none;
             }
         }
 
-        /* Custom scrollbar */
-        .sidebar::-webkit-scrollbar {
-            width: 4px;
+        @media (max-width: 576px) {
+            .header {
+                padding: 0 15px;
+            }
+            .main-content {
+                padding: 20px;
+            }
         }
 
-        .sidebar::-webkit-scrollbar-track {
-            background: #f1f1f1;
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
         }
 
-        .sidebar::-webkit-scrollbar-thumb {
-            background: #c1c1c1;
-            border-radius: 2px;
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 10px;
         }
 
-        .sidebar::-webkit-scrollbar-thumb:hover {
-            background: #a8a8a8;
+        ::-webkit-scrollbar-thumb {
+            background: rgba(99, 102, 241, 0.4);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-color);
+        }
+
+        /* Animation classes */
+        .fade-in {
+            animation: fadeIn var(--transition-speed) ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .slide-in {
+            animation: slideIn 0.4s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Welcome content styling */
+        .welcome-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px;
+            text-align: center;
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-sm);
+            animation: fadeIn 0.6s ease-in;
+        }
+
+        .welcome-container h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .welcome-container p {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            margin-bottom: 30px;
+        }
+
+        .welcome-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
         }
     </style>
 </head>
 <body>
     <!-- Header -->
-    <div class="header">
+    <div class="header" id="header">
         <div class="header-left">
             <button class="menu-toggle" onclick="toggleSidebar()">
                 <i class="fas fa-bars"></i>
             </button>
             <div class="logo" onclick="location.href='/'">
-                <i class="fas fa-chart-line"></i> DASHBOARD
+                <i class="fas fa-chart-pie"></i> DASHBOARD
             </div>
         </div>
         <div class="header-right">
@@ -322,16 +452,23 @@
     <!-- Sidebar -->
     <div id="sidebar" class="sidebar">
         <div id="sidebar-content" class="menu">
-            <!-- Sidebar menu akan diisi dengan JavaScript -->
+            <!-- Sidebar menu will be populated with JavaScript -->
         </div>
     </div>
 
     <!-- Main Content -->
     <div id="main-content" class="main-content">
         {% block content %}
-        <div style="text-align: center; margin-top: 50px;">
+        <div class="welcome-container slide-in">
+            <div class="welcome-icon">
+                <i class="fas fa-chart-line"></i>
+            </div>
             <h2>Welcome to Dashboard</h2>
-            <p>Select a menu item from the sidebar to get started.</p>
+            <p>Select a menu item from the sidebar to explore the features and analytics.</p>
+            <div style="margin-top: 30px; color: var(--text-light);">
+                <i class="fas fa-lightbulb" style="color: #f59e0b; margin-right: 8px;"></i>
+                Pro Tip: Use the sidebar menu to navigate between different sections
+            </div>
         </div>
         {% endblock %}
     </div>
@@ -341,65 +478,93 @@
         const isAuthenticated = "{{ request.user.is_authenticated|yesno:'true,false' }}" === "true";
         const username = "{{ request.user.username|default:'User' }}";
         const email = "{{ request.user.email|default:'user@example.com' }}";
+        const firstName = "{{ request.user.first_name|default:'' }}";
+        const lastName = "{{ request.user.last_name|default:'' }}";
+
+        // Generate initials for avatar
+        function getInitials(name) {
+            if (!name) return '';
+            const names = name.split(' ');
+            let initials = names[0].substring(0, 1).toUpperCase();
+            if (names.length > 1) {
+                initials += names[names.length - 1].substring(0, 1).toUpperCase();
+            }
+            return initials;
+        }
+
+        const userInitials = getInitials(firstName || lastName || username);
 
         const defaultMenu = `
             <div class="menu-section">
                 <div class="menu-section-title">Main Menu</div>
-                <div class="menu-item" onclick="location.href='/dashboard/'">
+                <div class="menu-item active" onclick="navigateTo('/dashboard/')">
                     <i class="fas fa-chart-line"></i> Dashboard
                 </div>
-                <div class="menu-item" onclick="location.href='/funnel/'">
+                <div class="menu-item" onclick="navigateTo('/funnel/')">
                     <i class="fas fa-filter"></i> Funnel Enrolment
                 </div>
-                <div class="menu-item" onclick="location.href='/testing/'">
+                <div class="menu-item" onclick="navigateTo('/testing/')">
                     <i class="fas fa-vial"></i> Data Testing
                 </div>
             </div>
             ${isAdmin ? `
             <div class="menu-section">
-                <div class="menu-section-title">Admin</div>
-                <div class="menu-item" onclick="location.href='/approval/'">
+                <div class="menu-section-title">Administration</div>
+                <div class="menu-item" onclick="navigateTo('/approval/')">
                     <i class="fas fa-check-circle"></i> Approval Regist
                 </div>
-                <div class="menu-item" onclick="location.href='/adminpanel/'">
+                <div class="menu-item" onclick="navigateTo('/adminpanel/')">
                     <i class="fas fa-cogs"></i> Admin Panel
                 </div>
             </div>
             ` : ''}
             <div class="menu-section">
-                <div class="menu-section-title">Others</div>
-                <div class="menu-item" onclick="location.href='/about/'">
+                <div class="menu-section-title">User</div>
+                <div class="menu-item" onclick="navigateTo('/about/')">
                     <i class="fas fa-info-circle"></i> About
                 </div>
-                <div class="menu-item" onclick="location.href='/profile/logout/'">
-                    <i class="fas fa-sign-out-alt"></i> Logout
-                </div>
+                ${isAuthenticated ? 
+                  '<div class="menu-item" onclick="navigateTo(\'/profile/logout/\')"><i class="fas fa-sign-out-alt"></i> Logout</div>' : 
+                  '<div class="menu-item" onclick="navigateTo(\'/profile/login/\')"><i class="fas fa-sign-in-alt"></i> Login</div>'
+                }
             </div>
         `;
 
         const profileMenu = `
             <div class="profile-section">
+                <div class="profile-avatar">
+                    ${userInitials || '<i class="fas fa-user"></i>'}
+                </div>
                 <div class="profile-info">
-                    <h4>${username}</h4>
+                    <h4>${firstName || username}</h4>
                     <p>${email}</p>
                 </div>
             </div>
             <div class="menu-section">
-                <div class="menu-item" onclick="location.href='/profile/'">
+                <div class="menu-item" onclick="navigateTo('/profile/')">
                     <i class="fas fa-user-edit"></i> Edit Profile
                 </div>
-                <div class="menu-item" onclick="location.href='/profile/settings/'">
+                <div class="menu-item" onclick="navigateTo('/profile/settings/')">
                     <i class="fas fa-cog"></i> Settings
                 </div>
-                ${isAuthenticated ? 
-                  '<div class="menu-item" onclick="location.href=\'/profile/logout/\'"><i class="fas fa-sign-out-alt"></i> Logout</div>' : 
-                  '<div class="menu-item" onclick="location.href=\'/profile/login/\'"><i class="fas fa-sign-in-alt"></i> Login</div>'
-                }
+                <div class="menu-item" onclick="navigateTo('/profile/notifications/')">
+                    <i class="fas fa-bell"></i> Notifications
+                </div>
             </div>
             <div class="back-button" onclick="loadDefaultMenu()">
                 <i class="fas fa-arrow-left"></i> Back to Menu
             </div>
         `;
+
+        function navigateTo(url) {
+            // Add loading animation
+            const mainContent = document.getElementById('main-content');
+            mainContent.classList.add('fade-in');
+            
+            // In a real app, you would fetch content here
+            // For this template, we'll just navigate
+            window.location.href = url;
+        }
 
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
@@ -424,8 +589,9 @@
             showBtn.classList.remove('visible');
             
             // On mobile, show overlay
-            if (window.innerWidth <= 768) {
+            if (window.innerWidth <= 992) {
                 overlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
             } else {
                 mainContent.classList.remove('expanded');
             }
@@ -441,32 +607,57 @@
             showBtn.classList.add('visible');
             mainContent.classList.add('expanded');
             overlay.classList.remove('active');
+            document.body.style.overflow = 'auto';
         }
 
         function showProfileMenu() {
             document.getElementById('sidebar-content').innerHTML = profileMenu;
+            showSidebar();
         }
 
         function loadDefaultMenu() {
             document.getElementById('sidebar-content').innerHTML = defaultMenu;
         }
 
-        // Handle window resize
-        window.addEventListener('resize', function() {
-            const overlay = document.getElementById('sidebar-overlay');
-            if (window.innerWidth > 768) {
-                overlay.classList.remove('active');
+        // Add scroll effect to header
+        window.addEventListener('scroll', function() {
+            const header = document.getElementById('header');
+            if (window.scrollY > 10) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
             }
         });
 
-        // Load menu saat halaman pertama kali dibuka
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            const overlay = document.getElementById('sidebar-overlay');
+            if (window.innerWidth > 992) {
+                overlay.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+        });
+
+        // Load menu when page first loads
         window.addEventListener('load', function() {
             loadDefaultMenu();
             
             // Auto-hide sidebar on mobile
-            if (window.innerWidth <= 768) {
+            if (window.innerWidth <= 992) {
                 hideSidebar();
             }
+            
+            // Highlight active menu item based on current URL
+            const path = window.location.pathname;
+            const menuItems = document.querySelectorAll('.menu-item');
+            menuItems.forEach(item => {
+                if (item.getAttribute('onclick') && item.getAttribute('onclick').includes(path)) {
+                    // Remove active class from all items first
+                    menuItems.forEach(i => i.classList.remove('active'));
+                    // Add to current item
+                    item.classList.add('active');
+                }
+            });
         });
     </script>
 </body>
