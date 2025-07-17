@@ -2,9 +2,38 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}Dashboard{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}University Dashboard{% endblock %}</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary-color: #1a365d;
+            --primary-hover: #2c5282;
+            --secondary-color: #2b6cb0;
+            --accent-color: #4299e1;
+            --dark-color: #1a202c;
+            --light-color: #f7fafc;
+            --card-bg: #ffffff;
+            --text-color: #2d3748;
+            --text-light: #718096;
+            --sidebar-width: 300px;
+            --header-height: 90px;
+            --transition-speed: 0.4s;
+            --border-radius: 12px;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.12);
+            --shadow-lg: 0 15px 30px rgba(0, 0, 0, 0.15);
+            --glass-bg: rgba(255, 255, 255, 0.9);
+            --glass-border: 1px solid rgba(255, 255, 255, 0.3);
+            --glass-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+            --gold-accent: #D4AF37;
+            --silver-accent: #C0C0C0;
+            --bronze-accent: #CD7F32;
+            --university-blue: #003366;
+            --university-gold: #FFD700;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -12,299 +41,821 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f5f7fa;
-            color: #333;
+            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: var(--light-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(26, 54, 93, 0.03) 0%, rgba(43, 108, 176, 0.03) 90%),
+                linear-gradient(to bottom, rgba(255,255,255,0.9), rgba(255,255,255,0.8));
         }
 
-        /* Header */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 600;
+        }
+
+        /* Luxurious Header with University Colors */
         .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, 
+                var(--university-blue) 0%, 
+                var(--primary-color) 100%);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             color: white;
-            padding: 0 20px;
-            height: 60px;
+            padding: 0 40px;
+            height: var(--header-height);
             display: flex;
             align-items: center;
             justify-content: space-between;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: var(--shadow-lg);
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             z-index: 1000;
+            transition: all var(--transition-speed) ease;
+            border-bottom: 3px solid var(--university-gold);
         }
 
-        .header-left {
+        .header.scrolled {
+            height: 80px;
+            background: linear-gradient(135deg, 
+                var(--university-blue) 0%, 
+                var(--primary-color) 100%);
+            box-shadow: var(--shadow-md);
+        }
+
+        .header-left, .header-right {
             display: flex;
             align-items: center;
-            gap: 15px;
-        }
-
-        .menu-toggle {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 18px;
-            cursor: pointer;
-            padding: 8px;
-            border-radius: 4px;
-            transition: background-color 0.3s ease;
-        }
-
-        .menu-toggle:hover {
-            background-color: rgba(255,255,255,0.1);
+            gap: 30px;
         }
 
         .logo {
-            font-size: 24px;
-            font-weight: bold;
+            font-size: 26px;
+            font-weight: 700;
             cursor: pointer;
-            letter-spacing: 1px;
-        }
-
-        .header-right {
+            letter-spacing: 0.5px;
             display: flex;
             align-items: center;
             gap: 15px;
+            position: relative;
+            padding: 5px 0;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            font-family: 'Playfair Display', serif;
+        }
+
+        .logo::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--university-gold), rgba(255,255,255,0));
+            transition: width var(--transition-speed) ease;
+            border-radius: 2px;
+        }
+
+        .logo:hover::after {
+            width: 100%;
+        }
+
+        .logo i {
+            font-size: 28px;
+            transition: all 0.5s ease;
+            color: var(--university-gold);
+        }
+
+        .logo:hover i {
+            transform: rotate(15deg) scale(1.1);
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
         }
 
         .user-info {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 15px;
             cursor: pointer;
-            padding: 8px 12px;
-            border-radius: 20px;
-            transition: background-color 0.3s ease;
+            padding: 12px 20px;
+            border-radius: 50px;
+            transition: all var(--transition-speed) ease;
+            position: relative;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 215, 0, 0.3);
         }
 
         .user-info:hover {
-            background-color: rgba(255,255,255,0.1);
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
 
         .user-avatar {
-            width: 32px;
-            height: 32px;
+            width: 46px;
+            height: 46px;
             border-radius: 50%;
-            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            background: linear-gradient(45deg, var(--secondary-color), var(--university-gold));
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: bold;
-            font-size: 14px;
+            font-size: 18px;
+            color: white;
+            box-shadow: var(--shadow-md);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 2px solid rgba(255, 255, 255, 0.4);
         }
 
-        /* Sidebar */
+        .user-info:hover .user-avatar {
+            transform: scale(1.15);
+            box-shadow: 0 0 0 4px rgba(255, 215, 0, 0.3);
+        }
+
+        /* Elegant Sidebar with University Theme */
         .sidebar {
-            width: 260px;
-            background: white;
-            height: calc(100vh - 60px);
+            width: var(--sidebar-width);
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            height: calc(100vh - var(--header-height));
             position: fixed;
-            top: 60px;
+            top: var(--header-height);
             left: 0;
-            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            box-shadow: var(--shadow-lg);
             transform: translateX(0);
-            transition: transform 0.3s ease;
+            transition: transform var(--transition-speed) ease;
             z-index: 999;
             overflow-y: auto;
+            border-top-right-radius: var(--border-radius);
+            border-bottom-right-radius: var(--border-radius);
+            border-right: 2px solid var(--university-gold);
         }
 
         .sidebar.hidden {
-            transform: translateX(-260px);
+            transform: translateX(-100%);
         }
 
         .sidebar-overlay {
             position: fixed;
-            top: 60px;
+            top: var(--header-height);
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0,0,0,0.5);
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
             display: none;
             z-index: 998;
+            opacity: 0;
+            transition: opacity var(--transition-speed) ease;
         }
 
         .sidebar-overlay.active {
             display: block;
+            opacity: 1;
         }
 
         .menu {
-            padding: 20px 0;
+            padding: 30px 0;
         }
 
         .menu-item {
             display: flex;
             align-items: center;
-            padding: 12px 20px;
-            cursor: pointer;
-            color: #555;
+            padding: 18px 35px;
+            color: var(--text-light);
             text-decoration: none;
-            transition: all 0.3s ease;
-            border-left: 3px solid transparent;
+            transition: all var(--transition-speed) cubic-bezier(0.25, 0.8, 0.25, 1);
+            margin: 0 15px;
+            border-radius: var(--border-radius);
+            position: relative;
+            overflow: hidden;
+            font-weight: 500;
+        }
+
+        .menu-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(26, 54, 93, 0.1), transparent);
+            transition: all 0.6s ease;
+        }
+
+        .menu-item:hover::before {
+            left: 100%;
         }
 
         .menu-item:hover {
-            background-color: #f8f9fa;
-            color: #667eea;
-            border-left-color: #667eea;
+            background-color: rgba(26, 54, 93, 0.08);
+            color: var(--university-blue);
+            transform: translateX(8px);
+            box-shadow: var(--shadow-sm);
         }
 
         .menu-item.active {
-            background-color: #e8f0fe;
-            color: #667eea;
-            border-left-color: #667eea;
+            background: linear-gradient(90deg, rgba(26, 54, 93, 0.15), rgba(26, 54, 93, 0.05));
+            color: var(--university-blue);
+            font-weight: 600;
+            box-shadow: var(--shadow-sm);
+            border-left: 4px solid var(--university-gold);
         }
 
         .menu-item i {
-            width: 20px;
-            margin-right: 12px;
-            font-size: 16px;
+            width: 28px;
+            margin-right: 18px;
+            font-size: 20px;
+            transition: all var(--transition-speed) ease;
+            color: var(--university-blue);
+        }
+
+        .menu-item:hover i {
+            transform: scale(1.15);
+            color: var(--university-blue);
+        }
+
+        .menu-item.active i {
+            color: var(--university-blue);
         }
 
         .menu-section {
-            margin-bottom: 30px;
+            margin-bottom: 40px;
         }
 
         .menu-section-title {
-            padding: 8px 20px;
-            font-size: 12px;
-            color: #999;
+            padding: 15px 35px;
+            font-size: 14px;
+            color: var(--text-light);
             text-transform: uppercase;
             font-weight: 600;
-            letter-spacing: 0.5px;
+            letter-spacing: 1px;
+            position: relative;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .menu-section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 35px;
+            width: calc(100% - 70px);
+            height: 1px;
+            background: linear-gradient(90deg, var(--university-gold), transparent);
         }
 
         .profile-section {
-            padding: 20px;
-            border-bottom: 1px solid #e9ecef;
+            padding: 35px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            border-radius: var(--border-radius);
+            margin: 20px 15px;
+            background: linear-gradient(135deg, rgba(26, 54, 93, 0.1), rgba(43, 108, 176, 0.1));
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid rgba(255, 215, 0, 0.2);
         }
 
-        .profile-info {
-            text-align: center;
+        .profile-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(26, 54, 93, 0.1) 0%, transparent 70%);
+            animation: rotate 15s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, var(--secondary-color), var(--university-gold));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 36px;
+            color: white;
+            margin: 0 auto 20px;
+            box-shadow: var(--shadow-lg);
+            border: 3px solid rgba(255, 255, 255, 0.4);
+            transition: all 0.5s ease;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .profile-avatar:hover {
+            transform: scale(1.05) rotate(5deg);
+            box-shadow: 0 10px 25px rgba(26, 54, 93, 0.3);
         }
 
         .profile-info h4 {
             margin-bottom: 5px;
-            color: #333;
+            color: var(--text-color);
+            font-size: 22px;
+            font-weight: 600;
+            font-family: 'Playfair Display', serif;
         }
 
         .profile-info p {
-            color: #666;
-            font-size: 14px;
+            color: var(--text-light);
+            font-size: 15px;
+            opacity: 0.9;
         }
 
         .back-button {
             display: flex;
             align-items: center;
-            padding: 10px 20px;
-            color: #667eea;
+            padding: 16px 35px;
+            color: var(--university-blue);
             cursor: pointer;
-            font-size: 14px;
-            transition: color 0.3s ease;
+            font-size: 16px;
+            transition: all var(--transition-speed) ease;
+            margin: 25px 15px;
+            border-radius: var(--border-radius);
+            background: rgba(26, 54, 93, 0.1);
+            border: none;
+            outline: none;
+            font-weight: 500;
         }
 
         .back-button:hover {
-            color: #5a6fd8;
+            background: rgba(26, 54, 93, 0.2);
+            color: var(--primary-hover);
+            transform: translateX(-5px);
         }
 
         .back-button i {
-            margin-right: 8px;
+            margin-right: 12px;
+            transition: transform var(--transition-speed) ease;
         }
 
-        /* Main Content */
+        .back-button:hover i {
+            transform: translateX(-5px);
+        }
+
         .main-content {
-            margin-left: 260px;
-            margin-top: 60px;
-            padding: 30px;
-            min-height: calc(100vh - 60px);
-            transition: margin-left 0.3s ease;
+            margin-left: var(--sidebar-width);
+            margin-top: var(--header-height);
+            padding: 50px;
+            min-height: calc(100vh - var(--header-height));
+            transition: margin-left var(--transition-speed) ease;
         }
 
         .main-content.expanded {
             margin-left: 0;
         }
 
-        /* Show sidebar button when hidden */
         .show-sidebar-btn {
             position: fixed;
-            top: 70px;
-            left: 10px;
-            background: #667eea;
-            color: white;
+            top: 50%;
+            left: var(--sidebar-width);
+            transform: translateY(-50%);
+            background: var(--university-blue);
+            color: var(--university-gold);
             border: none;
-            padding: 10px 12px;
+            padding: 16px;
             border-radius: 50%;
             cursor: pointer;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            box-shadow: var(--shadow-lg);
             z-index: 1001;
-            transform: translateX(-50px);
-            opacity: 0;
-            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 52px;
+            height: 52px;
+            transition: all var(--transition-speed) cubic-bezier(0.25, 0.8, 0.25, 1);
+            border: 2px solid var(--university-gold);
         }
 
-        .show-sidebar-btn.visible {
-            transform: translateX(0);
-            opacity: 1;
+        .sidebar.hidden + .show-sidebar-btn {
+            left: 0;
+            transform: translateX(-50%) translateY(-50%);
         }
 
         .show-sidebar-btn:hover {
-            background: #5a6fd8;
-            transform: translateX(0) scale(1.1);
+            background: var(--primary-hover);
+            transform: translateY(-50%) scale(1.15);
+            box-shadow: 0 10px 25px rgba(26, 54, 93, 0.4);
         }
 
-        /* Responsive */
-        @media (max-width: 768px) {
+        .sidebar.hidden + .show-sidebar-btn:hover {
+            transform: translateX(-50%) translateY(-50%) scale(1.15);
+        }
+
+        .show-sidebar-btn i {
+            transition: transform 0.3s ease;
+            font-size: 1.3rem;
+        }
+
+        .show-sidebar-btn:hover i {
+            transform: rotate(90deg);
+        }
+
+        @media (max-width: 992px) {
             .sidebar {
-                transform: translateX(-260px);
+                transform: translateX(-100%);
             }
-            
+            .sidebar:not(.hidden) {
+                transform: translateX(0);
+            }
             .main-content {
                 margin-left: 0;
             }
-            
-            .sidebar-overlay.active {
-                display: block;
-            }
-            
             .header-right .user-info span {
                 display: none;
             }
+            .show-sidebar-btn {
+                left: 0;
+                transform: translateX(-50%) translateY(-50%);
+            }
+            .sidebar:not(.hidden) + .show-sidebar-btn {
+                left: var(--sidebar-width);
+                transform: translateY(-50%);
+            }
         }
 
-        /* Custom scrollbar */
-        .sidebar::-webkit-scrollbar {
-            width: 4px;
+        @media (max-width: 768px) {
+            .header {
+                padding: 0 25px;
+            }
+            .main-content {
+                padding: 30px;
+            }
+            .menu-item {
+                padding: 16px 25px;
+            }
+            .welcome-container {
+                padding: 40px;
+            }
+            .welcome-container h2 {
+                font-size: 2.2rem;
+            }
         }
 
-        .sidebar::-webkit-scrollbar-track {
-            background: #f1f1f1;
+        @media (max-width: 576px) {
+            .header {
+                padding: 0 20px;
+            }
+            .logo {
+                font-size: 22px;
+            }
+            .main-content {
+                padding: 25px;
+            }
+            .menu-item {
+                padding: 14px 20px;
+            }
+            .welcome-container {
+                padding: 30px 20px;
+            }
+            .welcome-container h2 {
+                font-size: 1.8rem;
+            }
         }
 
-        .sidebar::-webkit-scrollbar-thumb {
-            background: #c1c1c1;
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(var(--university-blue), var(--secondary-color));
+            border-radius: 10px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-hover);
+        }
+
+        /* Animations */
+        .fade-in {
+            animation: fadeIn var(--transition-speed) ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .slide-in {
+            animation: slideIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Welcome Container */
+        .welcome-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 70px;
+            text-align: center;
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-lg);
+            border: var(--glass-border);
+            animation: fadeIn 0.8s ease-in;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .welcome-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(26, 54, 93, 0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+            z-index: -1;
+        }
+
+        .welcome-container h2 {
+            font-size: 3.5rem;
+            margin-bottom: 25px;
+            color: var(--university-blue);
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            position: relative;
+            display: inline-block;
+        }
+
+        .welcome-container h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--university-blue), var(--university-gold));
             border-radius: 2px;
         }
 
-        .sidebar::-webkit-scrollbar-thumb:hover {
-            background: #a8a8a8;
+        .welcome-container p {
+            font-size: 1.3rem;
+            color: var(--text-light);
+            margin-bottom: 40px;
+            line-height: 1.8;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .welcome-icon {
+            font-size: 6rem;
+            margin-bottom: 40px;
+            color: var(--university-blue);
+            animation: float 3s ease-in-out infinite;
+            text-shadow: 0 10px 20px rgba(26, 54, 93, 0.2);
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .pro-tip {
+            display: inline-flex;
+            align-items: center;
+            padding: 18px 30px;
+            background: rgba(212, 175, 55, 0.1);
+            border-radius: var(--border-radius);
+            color: var(--text-color);
+            font-size: 1.1rem;
+            margin-top: 40px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            font-weight: 500;
+        }
+
+        .pro-tip i {
+            color: var(--university-gold);
+            margin-right: 15px;
+            font-size: 1.3rem;
+        }
+
+        /* Floating Particles Background */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            background: linear-gradient(var(--university-blue), var(--secondary-color));
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: float-particle 15s infinite linear;
+        }
+
+        @keyframes float-particle {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0.3;
+            }
+            50% {
+                opacity: 0.1;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(360deg);
+                opacity: 0.3;
+            }
+        }
+
+        /* University Crest Divider */
+        .crest-divider {
+            height: 4px;
+            width: 150px;
+            background: linear-gradient(90deg, transparent, var(--university-blue), var(--university-gold), transparent);
+            margin: 30px auto;
+            position: relative;
+        }
+
+        .crest-divider::before {
+            content: '\f19d';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--glass-bg);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--university-gold);
+            font-size: 24px;
+            box-shadow: var(--shadow-sm);
+            border: 2px solid var(--university-gold);
+        }
+
+        /* Elegant Button */
+        .university-btn {
+            background: linear-gradient(135deg, var(--university-blue), var(--secondary-color));
+            color: white;
+            border: none;
+            padding: 18px 36px;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(26, 54, 93, 0.3);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            font-size: 1.1rem;
+            letter-spacing: 0.5px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            font-family: 'Playfair Display', serif;
+        }
+
+        .university-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--secondary-color), var(--university-blue));
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: -1;
+        }
+
+        .university-btn:hover::before {
+            opacity: 1;
+        }
+
+        .university-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(26, 54, 93, 0.4);
+            border-color: var(--university-gold);
+        }
+
+        .university-btn:active {
+            transform: translateY(1px);
+        }
+
+        .university-btn i {
+            margin-left: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .university-btn:hover i {
+            transform: translateX(5px);
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-top: 50px;
+        }
+
+        .stat-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            border: var(--glass-border);
+            transition: all 0.4s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .stat-icon {
+            font-size: 2.5rem;
+            color: var(--university-blue);
+            margin-bottom: 20px;
+        }
+
+        .stat-number {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: var(--university-blue);
+            font-family: 'Playfair Display', serif;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            color: var(--text-light);
+            font-size: 1.1rem;
+        }
+
+        /* Logout form button style */
+        .logout-form-btn {
+            background: none;
+            border: none;
+            width: 100%;
+            text-align: left;
+            padding: 0;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: inherit;
+            color: inherit;
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <div class="header">
+    <!-- Floating Particles Background -->
+    <div class="particles" id="particles"></div>
+
+    <!-- Luxurious Header with University Theme -->
+    <div class="header" id="header">
         <div class="header-left">
-            <button class="menu-toggle" onclick="toggleSidebar()">
-                <i class="fas fa-bars"></i>
-            </button>
             <div class="logo" onclick="location.href='/'">
-                <i class="fas fa-chart-line"></i> DASHBOARD
+                <i class="fas fa-university"></i> PRESIDENT UNIVERSITY 
             </div>
         </div>
         <div class="header-right">
             <div class="user-info" onclick="showProfileMenu()">
                 <div class="user-avatar">
-                    <i class="fas fa-user"></i>
+                    <i class="fas fa-user-graduate"></i>
                 </div>
                 <span>{{ request.user.username|default:"User" }}</span>
             </div>
@@ -314,159 +865,298 @@
     <!-- Sidebar Overlay -->
     <div id="sidebar-overlay" class="sidebar-overlay" onclick="hideSidebar()"></div>
 
-    <!-- Show Sidebar Button -->
-    <button id="show-sidebar-btn" class="show-sidebar-btn" onclick="showSidebar()">
-        <i class="fas fa-bars"></i>
-    </button>
-
-    <!-- Sidebar -->
+    <!-- Elegant Sidebar -->
     <div id="sidebar" class="sidebar">
         <div id="sidebar-content" class="menu">
-            <!-- Sidebar menu akan diisi dengan JavaScript -->
+            <!-- Sidebar menu will be populated with JavaScript -->
         </div>
     </div>
+
+    <!-- Show Sidebar Button with University Crest Icon -->
+    <button id="show-sidebar-btn" class="show-sidebar-btn" onclick="toggleSidebar()">
+        <i class="fas fa-landmark"></i>
+    </button>
 
     <!-- Main Content -->
     <div id="main-content" class="main-content">
         {% block content %}
-        <div style="text-align: center; margin-top: 50px;">
-            <h2>Welcome to Dashboard</h2>
-            <p>Select a menu item from the sidebar to get started.</p>
+        <div class="welcome-container slide-in">
+            <div class="welcome-icon">
+                <i class="fas fa-graduation-cap"></i>
+            </div>
+            <h2>Welcome to University Portal</h2>
+            <div class="crest-divider"></div>
+            <p>Discover the future of academic excellence with our comprehensive university management system. Access student records, course information, and administrative tools all in one place.</p>
+            <button class="university-btn" onclick="navigateTo('/dashboard/')">
+                Explore Dashboard <i class="fas fa-arrow-right"></i>
+            </button>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-number" id="students-count">12,450</div>
+                    <div class="stat-label">Current Students</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                    </div>
+                    <div class="stat-number" id="faculty-count">850</div>
+                    <div class="stat-label">Faculty Members</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-book-open"></i>
+                    </div>
+                    <div class="stat-number" id="courses-count">320</div>
+                    <div class="stat-label">Courses Offered</div>
+                </div>
+            </div>
+            
+            <div class="pro-tip">
+                <i class="fas fa-lightbulb"></i>
+                Pro Tip: Use the quick access menu to navigate between different academic departments
+            </div>
         </div>
         {% endblock %}
     </div>
 
     <script>
+        // Create floating particles
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = window.innerWidth < 768 ? 15 : 30;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // Random size between 5 and 15px
+                const size = Math.random() * 10 + 5;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                
+                // Random position
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.top = `${Math.random() * 100}%`;
+                
+                // Random animation duration
+                const duration = Math.random() * 20 + 10;
+                particle.style.animationDuration = `${duration}s`;
+                
+                // Random delay
+                particle.style.animationDelay = `${Math.random() * 5}s`;
+                
+                particlesContainer.appendChild(particle);
+            }
+        }
+
         const isAdmin = "{{ request.user.is_superuser|yesno:'true,false' }}" === "true";
         const isAuthenticated = "{{ request.user.is_authenticated|yesno:'true,false' }}" === "true";
         const username = "{{ request.user.username|default:'User' }}";
         const email = "{{ request.user.email|default:'user@example.com' }}";
+        const firstName = "{{ request.user.first_name|default:'' }}";
+        const lastName = "{{ request.user.last_name|default:'' }}";
+
+        function getInitials(name) {
+            if (!name) return '';
+            const names = name.split(' ');
+            let initials = names[0].substring(0, 1).toUpperCase();
+            if (names.length > 1) {
+                initials += names[names.length - 1].substring(0, 1).toUpperCase();
+            }
+            return initials;
+        }
+
+        const userInitials = getInitials(firstName || lastName || username);
 
         const defaultMenu = `
             <div class="menu-section">
-                <div class="menu-section-title">Main Menu</div>
-                <div class="menu-item" onclick="location.href='/dashboard/'">
-                    <i class="fas fa-chart-line"></i> Dashboard
+                <div class="menu-section-title">ACADEMIC DASHBOARD</div>
+                <div class="menu-item active" onclick="navigateTo('/dashboard/')">
+                    <i class="fas fa-tachometer-alt"></i> Dashboard
                 </div>
-                <div class="menu-item" onclick="location.href='/funnel/'">
-                    <i class="fas fa-filter"></i> Funnel Enrolment
+                <div class="menu-item" onclick="navigateTo('/funnel/')">
+                    <i class="fas fa-clipboard-list"></i>  Funnel Enrollment
                 </div>
-                <div class="menu-item" onclick="location.href='/testing/'">
-                    <i class="fas fa-vial"></i> Data Testing
+                <div class="menu-item" onclick="navigateTo('/testing/')">
+                    <i class="fas fa-clipboard-list"></i>  Data Testing
                 </div>
             </div>
             ${isAdmin ? `
             <div class="menu-section">
-                <div class="menu-section-title">Admin</div>
-                <div class="menu-item" onclick="location.href='/approval/'">
-                    <i class="fas fa-check-circle"></i> Approval Regist
+                <div class="menu-section-title">ADMINISTRATION</div>
+                <div class="menu-item" onclick="navigateTo('/approval/')">
+                    <i class="fas fa-file-signature"></i> Registrar Approvals
                 </div>
-                <div class="menu-item" onclick="location.href='/adminpanel/'">
-                    <i class="fas fa-cogs"></i> Admin Panel
+                <div class="menu-item" onclick="navigateTo('/adminpanel/')">
+                    <i class="fas fa-cogs"></i> System Administration
                 </div>
             </div>
             ` : ''}
             <div class="menu-section">
-                <div class="menu-section-title">Others</div>
-                <div class="menu-item" onclick="location.href='/about/'">
-                    <i class="fas fa-info-circle"></i> About
+                <div class="menu-section-title">Marketing Team</div>
+                <div class="menu-item" onclick="navigateTo('/core/')">
+                    <i class="fas fa-landmark"></i> About Our Team
                 </div>
-                <div class="menu-item" onclick="location.href='/profile/logout/'">
-                    <i class="fas fa-sign-out-alt"></i> Logout
-                </div>
+                ${isAuthenticated ? 
+                  `<form id="logout-form" action="{% url 'logout' %}" method="post" class="menu-item" style="display: flex; align-items: center; margin: 0 15px; padding: 18px 35px;">
+                    {% csrf_token %}
+                    <i class="fas fa-sign-out-alt" style="width: 28px; margin-right: 18px; font-size: 20px; color: var(--university-blue);"></i>
+                    <button type="submit" class="logout-form-btn" style="background: none; border: none; color: var(--text-light); font-weight: 500; cursor: pointer; text-align: left; width: 100%;">
+                        Logout
+                    </button>
+                  </form>` : 
+                  '<div class="menu-item" onclick="navigateTo(\'/profile/login/\')"><i class="fas fa-sign-in-alt"></i> Login</div>'
+                }
             </div>
         `;
 
         const profileMenu = `
             <div class="profile-section">
+                <div class="profile-avatar">
+                    ${userInitials || '<i class="fas fa-user-graduate"></i>'}
+                </div>
                 <div class="profile-info">
-                    <h4>${username}</h4>
+                    <h4>${firstName || username}</h4>
                     <p>${email}</p>
+                    <p style="margin-top: 10px; color: var(--university-gold); font-weight: 500;">
+                        <i class="fas fa-user-tie"></i> ${isAdmin ? 'Administrator' : 'University Member'}
+                    </p>
                 </div>
             </div>
             <div class="menu-section">
-                <div class="menu-item" onclick="location.href='/profile/'">
-                    <i class="fas fa-user-edit"></i> Edit Profile
+                <div class="menu-item" onclick="navigateTo('/profile/settings/')">
+                    <i class="fas fa-cog"></i> Account Settings
                 </div>
-                <div class="menu-item" onclick="location.href='/profile/settings/'">
-                    <i class="fas fa-cog"></i> Settings
-                </div>
-                ${isAuthenticated ? 
-                  '<div class="menu-item" onclick="location.href=\'/profile/logout/\'"><i class="fas fa-sign-out-alt"></i> Logout</div>' : 
-                  '<div class="menu-item" onclick="location.href=\'/profile/login/\'"><i class="fas fa-sign-in-alt"></i> Login</div>'
-                }
-            </div>
             <div class="back-button" onclick="loadDefaultMenu()">
-                <i class="fas fa-arrow-left"></i> Back to Menu
+                <i class="fas fa-arrow-left"></i> Back to Main Menu
             </div>
         `;
+
+        function navigateTo(url) {
+            const mainContent = document.getElementById('main-content');
+            mainContent.classList.add('fade-in');
+            setTimeout(() => {
+                window.location.href = url;
+            }, 300);
+        }
 
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             const mainContent = document.getElementById('main-content');
-            const showBtn = document.getElementById('show-sidebar-btn');
             const overlay = document.getElementById('sidebar-overlay');
+            const btn = document.getElementById('show-sidebar-btn');
             
             if (sidebar.classList.contains('hidden')) {
-                showSidebar();
+                sidebar.classList.remove('hidden');
+                if (window.innerWidth <= 992) {
+                    overlay.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                } else {
+                    mainContent.classList.remove('expanded');
+                }
+                btn.innerHTML = '<i class="fas fa-times"></i>';
             } else {
-                hideSidebar();
-            }
-        }
-
-        function showSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            const mainContent = document.getElementById('main-content');
-            const showBtn = document.getElementById('show-sidebar-btn');
-            const overlay = document.getElementById('sidebar-overlay');
-            
-            sidebar.classList.remove('hidden');
-            showBtn.classList.remove('visible');
-            
-            // On mobile, show overlay
-            if (window.innerWidth <= 768) {
-                overlay.classList.add('active');
-            } else {
-                mainContent.classList.remove('expanded');
+                sidebar.classList.add('hidden');
+                overlay.classList.remove('active');
+                document.body.style.overflow = 'auto';
+                if (window.innerWidth > 992) {
+                    mainContent.classList.add('expanded');
+                }
+                btn.innerHTML = '<i class="fas fa-landmark"></i>';
             }
         }
 
         function hideSidebar() {
             const sidebar = document.getElementById('sidebar');
-            const mainContent = document.getElementById('main-content');
-            const showBtn = document.getElementById('show-sidebar-btn');
             const overlay = document.getElementById('sidebar-overlay');
-            
+            const btn = document.getElementById('show-sidebar-btn');
             sidebar.classList.add('hidden');
-            showBtn.classList.add('visible');
-            mainContent.classList.add('expanded');
             overlay.classList.remove('active');
+            document.body.style.overflow = 'auto';
+            btn.innerHTML = '<i class="fas fa-landmark"></i>';
         }
 
         function showProfileMenu() {
             document.getElementById('sidebar-content').innerHTML = profileMenu;
+            const sidebar = document.getElementById('sidebar');
+            if (sidebar.classList.contains('hidden')) {
+                toggleSidebar();
+            }
         }
 
         function loadDefaultMenu() {
             document.getElementById('sidebar-content').innerHTML = defaultMenu;
         }
 
-        // Handle window resize
-        window.addEventListener('resize', function() {
-            const overlay = document.getElementById('sidebar-overlay');
-            if (window.innerWidth > 768) {
-                overlay.classList.remove('active');
+        // Animate stats counters
+        function animateCounters() {
+            const studentsCount = document.getElementById('students-count');
+            const facultyCount = document.getElementById('faculty-count');
+            const coursesCount = document.getElementById('courses-count');
+            
+            if (studentsCount && facultyCount && coursesCount) {
+                animateValue(studentsCount, 0, 12450, 2000);
+                animateValue(facultyCount, 0, 850, 2000);
+                animateValue(coursesCount, 0, 320, 2000);
+            }
+        }
+
+        function animateValue(element, start, end, duration) {
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                const value = Math.floor(progress * (end - start) + start);
+                element.innerHTML = value.toLocaleString();
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+
+        window.addEventListener('scroll', function() {
+            const header = document.getElementById('header');
+            if (window.scrollY > 10) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
             }
         });
 
-        // Load menu saat halaman pertama kali dibuka
-        window.addEventListener('load', function() {
-            loadDefaultMenu();
+        window.addEventListener('resize', function() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
             
-            // Auto-hide sidebar on mobile
-            if (window.innerWidth <= 768) {
-                hideSidebar();
+            if (window.innerWidth > 992) {
+                overlay.classList.remove('active');
+                document.body.style.overflow = 'auto';
             }
+        });
+
+        window.addEventListener('load', function() {
+            createParticles();
+            loadDefaultMenu();
+            animateCounters();
+            
+            if (window.innerWidth <= 992) {
+                document.getElementById('sidebar').classList.add('hidden');
+            } else {
+                document.getElementById('sidebar').classList.remove('hidden');
+            }
+            
+            const path = window.location.pathname;
+            const menuItems = document.querySelectorAll('.menu-item');
+            menuItems.forEach(item => {
+                if (item.getAttribute('onclick') && item.getAttribute('onclick').includes(path)) {
+                    menuItems.forEach(i => i.classList.remove('active'));
+                    item.classList.add('active');
+                }
+            });
         });
     </script>
 </body>
