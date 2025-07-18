@@ -1,0 +1,65 @@
+Ya, benar sekali! Jika kamu sudah berada di folder:
+
+makefile
+Copy
+Edit
+C:\Program Files\PostgreSQL\17\bin>
+Itu artinya kamu sudah siap menjalankan perintah psql.
+
+✅ Langkah-langkah Selanjutnya (untuk Mengimpor FINALLYBERES.sql)
+🟢 1. Pindahkan file FINALLYBERES.sql ke folder ini atau gunakan path lengkap
+Misalnya file FINALLYBERES.sql ada di C:\Users\Kamu\Downloads\, maka kamu bisa:
+
+cmd
+Copy
+Edit
+psql -U postgres -d namadatabase -f "C:\Users\Kamu\Downloads\FINALLYBERES.sql"
+Gantilah namadatabase dengan nama database tujuanmu. Jika database belum ada, buat dulu (lihat langkah 2).
+
+🟢 2. (Opsional) Membuat database kosong dulu (jika belum ada)
+Jalankan:
+
+cmd
+Copy
+Edit
+createdb -U postgres namadatabase
+Jika createdb tidak dikenali, gunakan psql dan ketik:
+
+cmd
+Copy
+Edit
+psql -U postgres
+lalu setelah masuk:
+
+sql
+Copy
+Edit
+CREATE DATABASE namadatabase;
+\q
+🟢 3. Jalankan perintah import
+Setelah file SQL siap dan database sudah ada, jalankan:
+
+cmd
+Copy
+Edit
+psql -U postgres -d namadatabase -f "C:\Path\To\FINALLYBERES.sql"
+Contoh lengkap:
+
+cmd
+Copy
+Edit
+psql -U postgres -d eda_2022_2023 -f "C:\Users\Kamu\Downloads\FINALLYBERES.sql"
+Jika PostgreSQL kamu pakai password, maka setelah perintah dijalankan, kamu akan diminta memasukkan password postgres.
+
+🛠️ Jika Gagal?
+Beri tahu saya:
+
+Pesan error lengkap
+
+Lokasi file .sql
+
+Nama database yang kamu pakai
+
+Versi PostgreSQL (misalnya 17.4)
+
+Nanti saya bantu pecahkan.

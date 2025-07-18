@@ -84,9 +84,13 @@ WSGI_APPLICATION = 'marketing_president_project.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'marketing_student_semester_6',
+        'USER': 'postgres',
+        'PASSWORD': 'NIHISISENDIRI',
+        'HOST': 'localhost',
+        'PORT': '5432',
+    }
 }
 
 
